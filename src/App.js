@@ -1,16 +1,32 @@
 import { useEffect, useState } from "react";
 
 function AppJs({ ad }) {
-  const [sayac, setSayac] = useState(0);
+  const [loading, setloading] = useState(true);
+  const [data, setdata] = useState([]);
 
   useEffect(() => {
-    console.log("1.efect çalıştı");
-  }, [sayac]);
-  useEffect(() => {
-    console.log("2.efect çalıştı");
-  });
+    async function fetchData() {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      const data = await response.json();
+      setdata(data);
+      setloading(false);
+    }
 
-  return <>{sayac}</>;
+    fetchData();
+  }, []);
+
+  console.log(data);
+
+  return (
+    <>
+      {loading && <p>Yükleniyor..</p>}
+      {data.map((kişi) => (
+        <p key={kişi.id}>{kişi.name}</p>
+      ))}
+    </>
+  );
 }
 
 export default AppJs;
